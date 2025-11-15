@@ -38,3 +38,6 @@ images:
   # This tells Cloud Build to list this image in the build summary
   # !!! EDIT THIS LINE with your Artifact Registry path !!!
   - 'us-central1-docker.pkg.dev/watchful-scope-473414-p3/app-repo/hello-app:latest'
+options:
+  logging: CLOUD_LOGGING_ONLY
+serviceAccount: "jenkins-ci-sa@watchful-scope-473414-p3.iam.gserviceaccount.com"
