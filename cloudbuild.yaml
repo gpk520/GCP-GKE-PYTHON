@@ -1,0 +1,40 @@
+steps:
+# 1. Build the Docker image
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+    - 'build'
+    - '-t'
+    # !!! EDIT THIS LINE with your Artifact Registry path !!!
+    - 'us-central1-docker.pkg.dev/watchful-scope-473414-p3/app-repo/hello-app:latest'
+    - '.'
+
+# 2. Push the Docker image to Artifact Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+    - 'push'
+    # !!! EDIT THIS LINE with your Artifact Registry path !!!
+    - 'us-central1-docker.pkg.dev/watchful-scope-473414-p3/app-repo/hello-app:latest'
+
+# 3. Get GKE credentials to connect kubectl
+- name: 'gcr.io/google.com/cloudsdktool/gcloud'
+  entrypoint: gcloud
+  args:
+    - 'container'
+    - 'clusters'
+    - 'get-credentials'
+    # !!! EDIT THIS LINE with your GKE cluster name and region !!!
+    - 'hello-cluster'
+    - '--region'
+    - 'us-central1'
+
+# 4. Apply the Kubernetes deployment
+- name: 'gcr.io/cloud-builders/kubectl'
+  args:
+    - 'apply'
+    - '-f'
+    - 'deployment.yaml'
+
+images:
+  # This tells Cloud Build to list this image in the build summary
+  # !!! EDIT THIS LINE with your Artifact Registry path !!!
+  - 'us-central1-docker.pkg.dev/watchful-scope-473414-p3/app-repo/hello-app:latest'
