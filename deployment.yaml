@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hello
+  template:
+    metadata:
+      labels:
+        app: hello
+    spec:
+      containers:
+      - name: hello-web-container
+        # !!! EDIT THIS LINE !!!
+        image: YOUR_ARTIFACT_REGISTRY_PATH/hello-app:latest
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-web-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: hello
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
