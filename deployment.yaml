@@ -15,7 +15,7 @@ spec:
       containers:
       - name: hello-web-container
         # !!! EDIT THIS LINE !!!
-        image: YOUR_ARTIFACT_REGISTRY_PATH/hello-app:latest
+        image: us-central1-docker.pkg.dev/watchful-scope-473414-p3/app-repo/hello-app:latest
         ports:
         - containerPort: 8080
 ---
