@@ -16,7 +16,7 @@ steps:
     - 'us-central1-docker.pkg.dev/watchful-scope-473414-p3/app-repo/hello-app:latest'
 
 # 3. Get GKE credentials to connect kubectl
-- name: 'gcr.io/google.com/cloudsdktool/gcloud'
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
   entrypoint: gcloud
   args:
     - 'container'
