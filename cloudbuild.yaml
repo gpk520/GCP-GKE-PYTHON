@@ -16,6 +16,7 @@ steps:
 # 3. Hand off to Cloud Deploy to create a new "release"
 # This command tells Cloud Deploy: "Here is the new image. Start the pipeline."
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
+  entrypoint: gcloud
   args:
   - deploy
   - releases
