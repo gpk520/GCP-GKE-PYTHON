@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: hello-web-container
-        # !!! EDIT THIS LINE !!!
-        image: us-central1-docker.pkg.dev/watchful-scope-473414-p3/app-repo/hello-app:latest
+        # This is now a placeholder!
+        image: hello-app 
         ports:
         - containerPort: 8080
 ---

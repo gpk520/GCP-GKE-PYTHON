@@ -1,0 +1,9 @@
+apiVersion: skaffold/v4beta7
+kind: Config
+build:
+  artifacts:
+    - image: hello-app # This name matches the placeholder
+      context: .       # Points to the Dockerfile in this directory
+manifests:
+  rawYaml:
+    - deployment.yaml  # Points to your k8s manifest

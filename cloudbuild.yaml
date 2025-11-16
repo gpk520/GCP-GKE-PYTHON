@@ -1,35 +1,38 @@
 steps:
-  # 1. Build image
-  - name: 'gcr.io/cloud-builders/docker'
-    args:
-      - 'build'
-      - '-t'
-      - 'us-central1-docker.pkg.dev/watchful-scope-473414-p3/app-repo/hello-app:latest'
-      - '.'
+# 1. Build and tag with the unique Git commit SHA
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+  - 'build'
+  - '-t'
+  - 'us-central1-docker.pkg.dev/watchful-scope-473414-p3/app-repo/hello-app:$SHORT_SHA'
+  - '.'
 
-  # 2. Push image
-  - name: 'gcr.io/cloud-builders/docker'
-    args:
-      - 'push'
-      - 'us-central1-docker.pkg.dev/watchful-scope-473414-p3/app-repo/hello-app:latest'
+# 2. Push the uniquely tagged image
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+  - 'push'
+  - 'us-central1-docker.pkg.dev/watchful-scope-473414-p3/app-repo/hello-app:$SHORT_SHA'
 
-  # 3. Get GKE credentials + deploy (using full cloud-sdk)
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
-    entrypoint: bash
-    args:
-      - -c
-      - |
-        gcloud container clusters get-credentials hello-cluster \
-          --region us-central1 \
-          --project $PROJECT_ID
+# 3. Hand off to Cloud Deploy to create a new "release"
+# This command tells Cloud Deploy: "Here is the new image. Start the pipeline."
+- name: 'gcr.io/google.com/cloudsdktool/gcloud'
+  args:
+  - deploy
+  - releases
+  - create
+  - 'hello-release-${SHORT_SHA}' # A unique name for the release
+  - --pipeline=hello-app-pipeline # The pipeline to use
+  - --region=us-central1
+  - --delivery-pipeline=hello-app-pipeline
+  # This is the magic: it tells Cloud Deploy what image to use
+  - --images=hello-app=us-central1-docker.pkg.dev/watchful-scope-473414-p3/app-repo/hello-app:$SHORT_SHA
 
-        kubectl apply -f deployment.yaml
-
+# This tells Cloud Build what images were built
 images:
-  - 'us-central1-docker.pkg.dev/watchful-scope-473414-p3/app-repo/hello-app:latest'
+- 'us-central1-docker.pkg.dev/watchful-scope-473414-p3/app-repo/hello-app:$SHORT_SHA'
 
 options:
   logging: CLOUD_LOGGING_ONLY
 
+# Your same Service Account
 serviceAccount: "jenkins-ci-sa@watchful-scope-473414-p3.iam.gserviceaccount.com"
-
