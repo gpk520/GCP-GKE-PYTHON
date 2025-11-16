@@ -22,7 +22,7 @@ steps:
   - releases
   - create
   - 'hello-release-${SHORT_SHA}' # A unique name for the release
-  - --pipeline=hello-app-pipeline # The pipeline to use
+  - "--delivery-pipeline=hello-app-pipeline" # The pipeline to use
   - --region=us-central1
   - --delivery-pipeline=hello-app-pipeline
   # This is the magic: it tells Cloud Deploy what image to use
