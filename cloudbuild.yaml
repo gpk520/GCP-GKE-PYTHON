@@ -1,5 +1,5 @@
-# 1. Build the Docker image
 steps:
+  # 1. Build image
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
@@ -7,14 +7,14 @@ steps:
       - 'us-central1-docker.pkg.dev/watchful-scope-473414-p3/app-repo/hello-app:latest'
       - '.'
 
-  # 2. Push the Docker image to Artifact Registry
+  # 2. Push image
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
       - 'us-central1-docker.pkg.dev/watchful-scope-473414-p3/app-repo/hello-app:latest'
 
-  # 3. Authenticate to GKE
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+  # 3. Get GKE credentials + deploy (using full cloud-sdk)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:latest'
     entrypoint: bash
     args:
       - -c
@@ -23,7 +23,6 @@ steps:
           --region us-central1 \
           --project $PROJECT_ID
 
-        # Apply all YAMLs
         kubectl apply -f deployment.yaml
 
 images:
